@@ -1,4 +1,5 @@
 import { all } from 'express/lib/application';
+import { render } from 'express/lib/response';
 import db from '../models/index';
 import CRUDService from '../services/CRUDService';
 let getHomePage = async (req, res) => {
@@ -34,10 +35,32 @@ let displayGetCRUD = async (req, res) => {
 
 
 }
+let getEditCRUD = async (req, res) => {
 
+    let userId = req.params.id;
+
+
+    let userData = await CRUDService.getUserInfoById(userId);
+    if (userData) {
+        return res.render('editCRUD.ejs', { userData: userData })
+    } else {
+        return res.send("User's not found!");
+    }
+
+
+
+}
+let putCRUD = async (req, res) => {
+    let data = req.body;
+
+    let allUsers = await CRUDService.updateUserData(data);
+    return res.render("displayCRUD.ejs", { data: allUsers });
+}
 module.exports = {
     getHomePage: getHomePage,
     getCRUD: getCRUD,
     createCrud: createCrud,
-    displayGetCRUD: displayGetCRUD
+    displayGetCRUD: displayGetCRUD,
+    getEditCRUD: getEditCRUD,
+    putCRUD: putCRUD
 }

@@ -1,4 +1,5 @@
 
+import { reject } from 'bcrypt/promises';
 import bcrypt from 'bcryptjs';
 import { flatten } from 'express/lib/utils';
 import db from '../models/index';
@@ -56,9 +57,49 @@ let getAllUser = () => {
 
     })
 }
+let getUserInfoById = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = await db.User.findOne({ where: { id: id }, raw: true });
+            if (user) {
+                resolve(user)
+            } else {
+                resolve(null)
+            }
+
+        } catch (error) {
+            reject(error)
+        }
+    });
+}
+let updateUserData = (data) => {
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            let user = await db.User.findOne({ where: { id: data.id } });
+            if (user) {
+                user.firstName = data.firstName;
+                user.lastName = data.lastName;
+                user.address = data.address;
+                user.phoneNumber = data.phoneNumber;
+                await user.save();
+                let allUsers = await db.User.findAll();
+                resolve(allUsers);
+            } else {
+                resolve(null);
+            }
+
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 
 module.exports = {
     createNewUser: createNewUser,
     hashUserPassword: hashUserPassword,
-    getAllUser: getAllUser
+    getAllUser: getAllUser,
+    getUserInfoById: getUserInfoById,
+    updateUserData: updateUserData
 }
