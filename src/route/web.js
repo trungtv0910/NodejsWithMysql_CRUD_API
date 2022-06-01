@@ -21,7 +21,7 @@ let initWebRoute = (app) => {
 
     // xử lý về API
     route.post('/api/login', userController.handleLogin);
-
+    route.get('/api/get-all/users', userController.handleGetAllUsers);
 
     return app.use("/", route);
 }
