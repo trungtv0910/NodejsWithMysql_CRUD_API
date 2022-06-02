@@ -19,9 +19,13 @@ let initWebRoute = (app) => {
 
     route.get('/delete-crud', homeController.deleteCRUD);
 
-    // xử lý về API
+    // xử lý về API với react JS
     route.post('/api/login', userController.handleLogin);
     route.get('/api/get-all/users', userController.handleGetAllUsers);
+    route.post('/api/create-new-user', userController.handleCreateNewUser);
+    // với react thì ta được dùng phương thức put và delete
+    route.put('/api/edit-user', userController.handleEditUser);
+    route.delete('/api/delete-user', userController.handleDeleteUser); //rest API
 
     return app.use("/", route);
 }
